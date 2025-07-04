@@ -6,7 +6,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
     exit;
 }
 
-require_once 'php/config.php';
+require_once 'php/config.php';                                          
 
 // statistics
 $query_users = "SELECT COUNT(*) as total_users FROM teach_user";
@@ -157,7 +157,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_password'])) {
                     <li><a href="admin_dashboard.php" class="dashboard-button">Dashboard</a></li>
                     <!-- <li><a href="teacher_dashboard.php">Teacher Dashboard</a></li> -->
                     <li><a href="#" class="download-button">Download</a></li>
-                    <li><a href="#" class="import-button">Import CSV/Excel</a></li>
+                   <li>
+    <form id="importForm" action="import_students.php" method="post" enctype="multipart/form-data" style="display: inline;">
+        <label for="excel_file" class="import-button" style="cursor: pointer;">Import CSV/Excel</label>
+        <input type="file" id="excel_file" name="excel_file" accept=".csv" style="display: none;">
+        <input type="hidden" name="import" value="1">
+    </form>
+</li>
+
                     <li><a href="logout.php" class="logout-container logout-button">Logout</a></li>
                 </ul>
             </nav>
@@ -773,6 +780,15 @@ document.querySelectorAll(".view-violations").forEach(button => {
     document.getElementById("violation-modal").addEventListener("click", function (e) {
         if (e.target === this) {
             this.style.display = "none";
+        }
+    });
+
+    const excelInput = document.getElementById('excel_file');
+    const importForm = document.getElementById('importForm');
+
+    excelInput.addEventListener('change', function () {
+        if (excelInput.files.length > 0) {
+            importForm.submit();
         }
     });
 
